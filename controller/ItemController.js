@@ -1,8 +1,9 @@
-import {getItems, setItems} from "../db/DB.js";
+import {items} from "../db/DB.js";
 import {Item} from "../model/Item.js";
 
 export class ItemController {
     constructor() {
+        this.items = items;
         $(document).ready(this.loadingItemsIfAvailable.bind(this));
         $('#addItem').click(this.addItem.bind(this));
         $('#itemUpdate').click(this.updateItem.bind(this));
@@ -10,19 +11,20 @@ export class ItemController {
         $("#itemTbl").on("click", ".item_delete", this.deleteItem.bind(this));
         $('.itemfields').on('keyup', this.validateItemDetails.bind(this));
         this.allFiledsValidated = false;
+
     }
 
     loadingItemsIfAvailable() {
         this.loadItemsTbl()
         //load item codes in place order options
-        getItems().map(i => {
+        this.items.map(i => {
             $('#itemCodes').append(`<option value=${i.code}>${i.code}</option>`);
         });
     }
 
     loadItemsTbl() {
         let tr = ``;
-        getItems().map(item => {
+        this.items.map(item => {
             tr += `
             <tr >
                 <td>${item.code}</td>
@@ -47,24 +49,29 @@ export class ItemController {
         const price = $('#item_price').val();
         const qty = $('#item_qty').val();
         const item = new Item(itemCode, des, price, qty);
-        const itemExists = getItems().some((i) => i.code === itemCode);
+        const itemExists = this.items.some((i) => i.code === itemCode);
         if (itemExists) {
-            alert("Item Already exists");
+            $('#msg').text(itemCode, ' Item Already exists');
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
             return;
         }
         if (!this.allFiledsValidated) {
-            alert("Check the fields again");
+            $('#msg').text('Check the fields again');
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
             return;
         }
-        const items = getItems();
-        console.log(items);
-        items.push(item);
+
+
+        this.items.push(item);
         $('#item_code').val('');
         $('#item_description').val('');
         $('#item_price').val('');
         $('#item_qty').val('');
-        setItems(items);
-        alert(item.code + " Added Successfully");
+        $('#msg').text(itemCode, ' Added Successfully!');
+        $('#alertInfo').text('Success');
+        $('#alertModal').modal('show');
         this.loadItemsTbl();
     }
 
@@ -75,25 +82,31 @@ export class ItemController {
         const des = $('#item_description').val();
         const price = $('#item_price').val();
         const qty = $('#item_qty').val();
-        const items = getItems();
-        items.forEach((item) => {
+        let itemAvailable = this.items.some(item => item.code === itemCode);
+        if (!itemAvailable) {
+            $('#msg').text("Item doesn't available you should add instead");
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
+        this.items.forEach((item) => {
             if (itemCode === item.code) {
                 item.des = des;
                 item.price = price;
                 item.qty = qty;
-                alert('item updated successfully');
+                $('#msg').text(itemCode, ' Added Successfully!');
+                $('#alertInfo').text('Success');
+                $('#alertModal').modal('show');
             }
         });
-        setItems(items);
-
         this.loadItemsTbl();
     }
 
     //click on item table row and load to the fields----------------------------------
     clickOnTableItemLoadFields(e) {
         const itemCode = $(e.target).closest('tr').find('td').eq(0).text();
-        console.log(itemCode)
-        for (const item of getItems()) {
+
+        for (const item of this.items) {
             if (itemCode === item.code) {
                 $('#item_code').val(item.code);
                 $('#item_description').val(item.des);
@@ -108,7 +121,7 @@ export class ItemController {
     deleteItem(e) {
         const itemCode = $(e.target).closest("tr").find("td").eq(0).text();
         console.log(itemCode);
-        setItems(getItems().filter((item) => item.code !== itemCode));
+        this.items = this.items.filter((item) => item.code !== itemCode);
         this.loadItemsTbl();
     }
 

@@ -4,7 +4,7 @@ import {customers} from "../db/DB.js";
 
 export class CustomerController {
     constructor() {
-
+        this.customers = customers;
         $('#add_customer').click(this.addCustomer.bind(this));
         $('#update_customer').click(this.updateCustomer.bind(this));
         $(document).ready(this.loadCustomersIfAvailable.bind(this));
@@ -16,7 +16,7 @@ export class CustomerController {
         this.customerNameElement = $('#customer_name');
         this.customerAddressElement = $('#customer_address');
         $('#customerSearchField').on('keyup', this.searchCustomers.bind(this));
-        this.customers = customers;
+
     }
 
     searchCustomers() {
@@ -103,7 +103,7 @@ export class CustomerController {
     }
 
     loadCustomersIfAvailable() {
-
+        this.loadCustomersTbl();
         //load customer ids in place order options
         this.customers.map(c => {
             $('#customerIds').append(`<option value=${c.customerId}>${c.customerId}</option>`);
