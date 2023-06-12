@@ -4,7 +4,7 @@ import {Item} from "../model/Item.js";
 export class ItemController {
     constructor() {
         this.items = items;
-        $(document).ready(this.loadingItemsIfAvailable.bind(this));
+        $('.nav-link').click(this.loadingItemsIfAvailable.bind(this));
         $('#addItem').click(this.addItem.bind(this));
         $('#itemUpdate').click(this.updateItem.bind(this));
         $('#itemTbl').on('click', 'tr', this.clickOnTableItemLoadFields.bind(this));
@@ -15,11 +15,8 @@ export class ItemController {
     }
 
     loadingItemsIfAvailable() {
+        this.items = items;
         this.loadItemsTbl()
-        //load item codes in place order options
-        this.items.map(i => {
-            $('#itemCodes').append(`<option value=${i.code}>${i.code}</option>`);
-        });
     }
 
     loadItemsTbl() {

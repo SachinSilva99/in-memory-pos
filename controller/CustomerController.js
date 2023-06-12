@@ -4,10 +4,11 @@ import {customers} from "../db/DB.js";
 
 export class CustomerController {
     constructor() {
-        this.customers = customers;
+
         $('#add_customer').click(this.addCustomer.bind(this));
         $('#update_customer').click(this.updateCustomer.bind(this));
-        $(document).ready(this.loadCustomersIfAvailable.bind(this));
+        this.customers = customers;
+        $('.nav-link').click(this.loadCustomersTbl.bind(this));
         $('#customerTbl').on('click', 'tr', this.clickTableLoadFields.bind(this));
         $("#customerTbl").on("click", ".customer_delete", this.deleteCustomer.bind(this));
         $('.fields').on('keyup', this.validateCustomerDetails.bind(this));
@@ -41,6 +42,7 @@ export class CustomerController {
     }
 
     loadCustomersTbl() {
+        this.customers = customers;
         let tr = ``;
         this.customers.map(customer => {
             tr += `
@@ -71,7 +73,7 @@ export class CustomerController {
             this.customerAddressElement.val()
         );
 
-        const customerExists = this.customers.some((c)=> c.customerId === this.customerIdElement.val());
+        const customerExists = customers.some((c) => c.customerId === this.customerIdElement.val());
         if (customerExists) {
             alert("Customer Already exists");
             return;
@@ -102,13 +104,6 @@ export class CustomerController {
         this.loadCustomersTbl();
     }
 
-    loadCustomersIfAvailable() {
-        this.loadCustomersTbl();
-        //load customer ids in place order options
-        this.customers.map(c => {
-            $('#customerIds').append(`<option value=${c.customerId}>${c.customerId}</option>`);
-        });
-    }
 
     clickTableLoadFields(e) {
         const customerId = $(e.target).closest('tr').find('th').eq(0).text();

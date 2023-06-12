@@ -6,13 +6,14 @@ export class OrderController {
         this.orders = orders;
         this.orderDetails = orderDetails;
         $('select#orderId').change(this.loadOrders.bind(this));
-        $(document).ready(this.loadOrdersIfAvailable.bind(this));
+        $('.nav-link').click(this.loadOrdersIfAvailable.bind(this));
 
     }
 
     loadOrders(e) {
+        this.orders = orders;
+        this.orderDetails = orderDetails;
         const orderId = $(e.target).children("option:selected").val();
-       // console.log(orderId);
         if (orderId) {
             const ods = this.orderDetails.filter(o => o._orderId === orderId);
             console.log(ods);
@@ -34,7 +35,7 @@ export class OrderController {
         }
     }
     loadOrdersIfAvailable(){
-
+        this.orders = orders;
 
         //load order ids
         this.orders.map(od => {
