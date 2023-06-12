@@ -7,7 +7,6 @@ export class CustomerController {
 
         $('#add_customer').click(this.addCustomer.bind(this));
         $('#update_customer').click(this.updateCustomer.bind(this));
-        $('#delete').click(this.updateCustomer.bind(this));
         $(document).ready(this.loadCustomersIfAvailable.bind(this));
         $('#customerTbl').on('click', 'tr', this.clickTableLoadFields.bind(this));
         $("#customerTbl").on("click", ".customer_delete", this.deleteCustomer.bind(this));
@@ -22,7 +21,7 @@ export class CustomerController {
 
     searchCustomers() {
         const searchField = $('#customerSearchField').val();
-        const matchedCustomers = getCustomers().filter(
+        const matchedCustomers = this.customers.filter(
             c => c.customerId.includes(searchField) || c.name.includes(searchField)
         );
         let tr = ``;
@@ -92,26 +91,21 @@ export class CustomerController {
         const customerId = this.customerIdElement.val();
         const customerName = this.customerNameElement.val();
         const customerAddress = this.customerAddressElement.val();
-        const customers = getCustomers();
-        customers.forEach((customer) => {
+
+        this.customers.forEach((customer) => {
             if (customerId === customer.customerId) {
                 customer.name = customerName;
                 customer.address = customerAddress;
                 alert('customer updated successfully');
             }
         });
-        setCustomers(customers);
         this.loadCustomersTbl();
     }
 
     loadCustomersIfAvailable() {
 
-        //loading customers if available
-        getCustomers();
-        this.loadCustomersTbl();
-
         //load customer ids in place order options
-        getCustomers().map(c => {
+        this.customers.map(c => {
             $('#customerIds').append(`<option value=${c.customerId}>${c.customerId}</option>`);
         });
     }
@@ -119,7 +113,7 @@ export class CustomerController {
     clickTableLoadFields(e) {
         const customerId = $(e.target).closest('tr').find('th').eq(0).text();
 
-        for (const customer of getCustomers()) {
+        for (const customer of this.customers) {
             if (customerId === customer.customerId) {
                 this.customerIdElement.val(customer.customerId);
                 this.customerNameElement.val(customer.name);
@@ -131,7 +125,7 @@ export class CustomerController {
 
     deleteCustomer(e) {
         const customerId = $(e.target).closest("tr").find("th").eq(0).text();
-        setCustomers(getCustomers().filter((customer) => customer.customerId !== customerId));
+        this.customers = this.customers.filter((customer) => customer.customerId !== customerId);
         $('#msg').text('Customer Deleted Successfully');
         $('#alertInfo').text('Success');
         $('#alertModal').modal('show');
