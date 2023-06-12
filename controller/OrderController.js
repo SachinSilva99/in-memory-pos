@@ -1,7 +1,10 @@
-import {getOrderDetails, getOrders} from "../db/DB.js";
+import {orderDetails, orders} from "../db/DB.js";
 
 export class OrderController {
+
     constructor() {
+        this.orders = orders;
+        this.orderDetails = orderDetails;
         $('select#orderId').change(this.loadOrders.bind(this));
         $(document).ready(this.loadOrdersIfAvailable.bind(this));
 
@@ -11,9 +14,9 @@ export class OrderController {
         const orderId = $(e.target).children("option:selected").val();
        // console.log(orderId);
         if (orderId) {
-            const ods = getOrderDetails().filter(o => o._orderId === orderId);
+            const ods = this.orderDetails.filter(o => o._orderId === orderId);
             console.log(ods);
-            const order = getOrders().find(o => o._id === orderId);
+            const order = this.orders.find(o => o._id === orderId);
 
             let tr = ``;
             ods.forEach(od => {
@@ -31,10 +34,10 @@ export class OrderController {
         }
     }
     loadOrdersIfAvailable(){
-        console.log(getOrders());
+
 
         //load order ids
-        getOrders().map(od => {
+        this.orders.map(od => {
             $('#orderId').append(`<option value=${od._id}>${od._id}</option>`);
         });
     }
