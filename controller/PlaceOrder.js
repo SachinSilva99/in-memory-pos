@@ -215,6 +215,14 @@ export class PlaceOrder {
             this.customers.push(customer);
         }
         this.orders.push(new Order(orderId, new Date(), customer));
+
+        this.orderItems.map(od => {
+            const item = items.find(item => item.code === od.code);
+            if (item) {
+                item.qty -= od.qty_need;
+            }
+        });
+        console.log(items);
         this.orderItems = [];
         this.loadOrderTbl();
         const balance = cash - total;
@@ -233,6 +241,7 @@ export class PlaceOrder {
         $('#item_description_p').val('');
         $('#item_price_p').val('');
         $('#item_qty_need_p').val('');
+        $('#item_qty_p').val('');
         $('#customer_id_p').val('');
         $('#customer_name_p').val('');
         $('#customer_address_p').val('');
