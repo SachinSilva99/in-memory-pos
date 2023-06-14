@@ -125,7 +125,6 @@ export class PlaceOrder {
         const itemPrice = $('#item_price_p').val();
         const itemQtyNeeded = $('#item_qty_need_p').val();
         const qty = $('#item_qty_p').val();
-        console.log(itemQtyNeeded);
         if(itemQtyNeeded === '' || itemQtyNeeded < 0){
             $('#msg').text("QTY needed cannot be empty or negative");
             $('#alertInfo').text('Error : ');
@@ -143,8 +142,7 @@ export class PlaceOrder {
         if (itemInTable) {
             this.orderItems.forEach(ot => {
                 if (ot.code === itemCode) {
-                    console.log(ot.qty_need + itemQtyNeeded);
-                    if (ot.qty_need <= itemQtyNeeded || qty < (parseInt(ot.qty_need) + parseInt(itemQtyNeeded))) {
+                    if (qty < (parseInt(ot.qty_need) + parseInt(itemQtyNeeded))) {
                         $('#msg').text("QTY need cannot exceed qty");
                         $('#alertInfo').text('Error : ');
                         $('#alertModal').modal('show');
