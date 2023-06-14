@@ -46,7 +46,8 @@ export class PlaceOrder {
 
     getLastOrderId() {
         if (orders.length === 0) return 'D001';
-        return orders.slice(-1)[0].id;
+        let orderId = orders.slice(-1)[0].id;
+        return this.generateOrderId(orderId);
     }
 
     customerSelectOnChange(e) {
