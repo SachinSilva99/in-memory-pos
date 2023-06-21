@@ -165,7 +165,7 @@ export class PlaceOrder {
     }
 
     placeOrderBtnOnClick() {
-        const total = parseFloat($('.total').text());
+        let total = parseFloat($('.total').text());
         const orderId = $('.order-id').text();
         if ($('#cash').val() === '') {
             $('#msg').text("Cash cannot be empty");
@@ -178,31 +178,43 @@ export class PlaceOrder {
             $('#customer_name_p').val().length === 0 ||
             $('#customer_address_p').val().length === 0) {
             $('#msg').text("Customer cannot be empty");
-            $('#alertInfo').text('Success');
+            $('#alertInfo').text('Error:');
             $('#alertModal').modal('show');
             return;
         }
         if (this.orderItems.length === 0) {
             $('#msg').text("Please add some items");
-            $('#alertInfo').text('Success');
+            $('#alertInfo').text('Error:');
             $('#alertModal').modal('show');
             return;
         }
         if (cash.length === 0) {
             $('#msg').text('Please input the cash amount');
-            $('#alertInfo').text('Success');
+            $('#alertInfo').text('Error:');
             $('#alertModal').modal('show');
             return;
         }
-        console.log('cash', cash);
-        console.log('total', total);
-
         if (cash < total) {
             $('#msg').text("Cash isn't enough");
-            $('#alertInfo').text('Success');
+            $('#alertInfo').text('Error:');
             $('#alertModal').modal('show');
             return;
         }
+        let discount = $('#discount').val();
+        if(!/^([0-9]|[1-9][0-9]|100)$/.test(discount)){
+            $('#msg').text("Discount is invalid");
+            $('#alertInfo').text('Error:');
+            $('#alertModal').modal('show');
+            return;
+        }
+        if(!this.allFiledsValidated){
+            $('#msg').text("Fields are invalid");
+            $('#alertInfo').text('Error:');
+            $('#alertModal').modal('show');
+            return;
+        }
+        const discountAmount = (discount/100) * total;
+        total -= discountAmount;
         const orderDetails = this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price));
         orderDetails.forEach(od => this.orderDetails.push(od));
         const customerId = $('#customer_id_p').val();
@@ -222,7 +234,6 @@ export class PlaceOrder {
                 item.qty -= od.qty_need;
             }
         });
-        console.log(items);
         this.orderItems = [];
         this.loadOrderTbl();
         const balance = cash - total;
@@ -264,7 +275,6 @@ export class PlaceOrder {
         if (!qtyRegex.test(qtyNeeded)) {
             $('#item_qty_need_p').css('border', '3px solid crimson');
         }
-
     }
 
     validateCustomerDetails() {
