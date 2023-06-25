@@ -73,7 +73,7 @@
             </div>
             <div class="col-md-6 col-sm-12 col-lg-4">
                 <label for="search" class="form-label">Search</label>
-                <input id="customerSearchField"  type="text" class="form-control" placeholder="search id or name...">
+                <input id="customerSearchField" type="text" class="form-control" placeholder="search id or name...">
             </div>
         </form>
         <table class="table table-hover">
@@ -239,8 +239,22 @@
                 </div>
                 <select class="custom-select" id="orderId">
                     <option selected>Select Order</option>
-
                 </select>
+            </div>
+            <div class="input-group mb-3 order-id-select col-md-3 col-sm-12 col-lg-3">
+                <div class="col-lg-3 col-12 col-md-6 col-sm-12">
+                    <label for="customer_id_o" class="form-label">Customer Id</label>
+                    <input type="text" class="form-control fields" id="customer_id_o" placeholder="C001" readonly>
+                </div>
+                <div class=" col-lg-3 col-12 col-md-6 col-sm-12">
+                    <label for="customer_name_o" class="form-label">Name</label>
+                    <input type="text" class="form-control fields" id="customer_name_o" placeholder="Sachin" readonly>
+                </div>
+                <div class="col-md-12 col-lg-6 col-sm-12">
+                    <label for="customer_address_o" class="form-label">Address</label>
+                    <input type="text" class="form-control fields" id="customer_address_o" placeholder="1234 Main St"
+                           readonly>
+                </div>
             </div>
             <table class="table table-hover">
                 <thead>

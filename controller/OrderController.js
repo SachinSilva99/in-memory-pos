@@ -16,9 +16,11 @@ export class OrderController {
         const orderId = $(e.target).children("option:selected").val();
         if (orderId) {
             const ods = this.orderDetails.filter(o => o._orderId === orderId);
-            console.log(ods);
             const order = this.orders.find(o => o._id === orderId);
-
+            const customer = order.customer;
+            $('#customer_id_o').val(customer.id);
+            $('#customer_name_o').val(customer.name);
+            $('#customer_address_o').val(customer.address);
             let tr = ``;
             ods.forEach(od => {
                 tr += `
@@ -34,9 +36,15 @@ export class OrderController {
             $('#ordersTbody').html(tr);
         }
     }
-    loadOrdersIfAvailable(){
-        this.orders = orders;
 
+    loadOrdersIfAvailable() {
+        $('#ordersTbody').html(``);
+        $('#customer_id_o').val('');
+        $('#customer_name_o').val('');
+        $('#customer_address_o').val('');
+        this.orders = orders;
+        $('#orderId').empty();
+        $('#orderId').append(`<option value='Select an order'>Select an order</option>`);
         //load order ids
         this.orders.map(od => {
             $('#orderId').append(`<option value=${od._id}>${od._id}</option>`);
