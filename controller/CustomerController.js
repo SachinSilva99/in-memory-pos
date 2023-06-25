@@ -120,10 +120,14 @@ export class CustomerController {
 
     deleteCustomer(e) {
         const customerId = $(e.target).closest("tr").find("th").eq(0).text();
-        this.customers = this.customers.filter((customer) => customer.customerId !== customerId);
+        const index = this.customers.findIndex((customer) => customer.customerId === customerId);
+        if (index !== -1) {
+            this.customers.splice(index, 1);
+        }
         $('#msg').text('Customer Deleted Successfully');
         $('#alertInfo').text('Success');
         $('#alertModal').modal('show');
+        console.log(this.customers);
         this.loadCustomersTbl();
     }
 
