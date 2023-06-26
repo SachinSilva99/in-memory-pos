@@ -117,8 +117,10 @@ export class ItemController {
     //delete item
     deleteItem(e) {
         const itemCode = $(e.target).closest("tr").find("td").eq(0).text();
-        console.log(itemCode);
-        this.items = this.items.filter((item) => item.code !== itemCode);
+        const index = this.items.findIndex((item) => item.code === itemCode);
+        if (index !== -1) {
+            this.items.splice(index, 1);
+        }
         this.loadItemsTbl();
     }
 
